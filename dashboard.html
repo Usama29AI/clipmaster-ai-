@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipMaster AI Dashboard</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ background:#0b1020;
+ color:#f4f6ff;
+ font-family:Arial,sans-serif;
+}
+
+header{
+ padding:20px;
+ background:#151f37;
+ border-bottom:1px solid #293653;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.logo{font-size:22px;font-weight:bold;color:#91a9ff}
+
+.container{padding:20px;max-width:900px;margin:auto}
+
+h2{margin-top:25px}
+
+.card{
+ background:#151f37;
+ border:1px solid #293653;
+ padding:20px;
+ border-radius:14px;
+ margin-bottom:18px;
+}
+
+input,select{
+ width:100%;
+ padding:13px;
+ margin:10px 0 18px;
+ border-radius:8px;
+ border:1px solid #354363;
+ background:#0b1020;
+ color:white;
+}
+
+button{
+ background:#657fff;
+ color:white;
+ padding:13px 18px;
+ border:0;
+ border-radius:8px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+button:hover{opacity:.85}
+
+.upload{
+ border:2px dashed #657fff;
+ padding:30px 15px;
+ text-align:center;
+ border-radius:12px;
+}
+
+#videoPreview{
+ width:100%;
+ max-height:300px;
+ margin-top:15px;
+ display:none;
+}
+
+.feature{
+ padding:12px;
+ background:#202d49;
+ border-radius:8px;
+ margin:9px 0;
+}
+
+.muted{color:#9caaca;font-size:14px}
+
+#message{color:#91a9ff;margin-top:15px}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">ClipMaster AI</div>
+ <a href="login.html" style="color:#91a9ff">
+ Logout
+ </a>
+</header>
+
+<div class="container">
+
+<h2>Welcome to Your Dashboard 🚀</h2>
+<p class="muted">Your AI Video Studio</p>
+
+<div class="card">
+ <h3>1. Upload Your Video</h3>
+
+ <div class="upload">
+  <p>Select your video file</p>
+  <input type="file" id="videoFile" accept="video/*">
+  <video id="videoPreview" controls></video>
+ </div>
+</div>
+
+<div class="card">
+ <h3>2. Clip Settings</h3>
+
+ <label>Caption Language</label>
+ <select id="language">
+  <option value="Urdu">Urdu</option>
+  <option value="English">English</option>
+  <option value="Both">Urdu + English</option>
+ </select>
+
+ <label>Video Format</label>
+ <select id="format">
+  <option value="9:16">9:16 - YouTube Shorts</option>
+  <option value="16:9">16:9 - YouTube</option>
+  <option value="1:1">1:1 - Instagram</option>
+ </select>
+
+ <label>Number of Clips</label>
+ <select id="clips">
+  <option>3</option>
+  <option>5</option>
+  <option>10</option>
+ </select>
+
+ <button onclick="prepareClips()">
+ Prepare Clip Settings
+ </button>
+
+ <p id="message"></p>
+</div>
+
+<div class="card">
+ <h3>3. AI Tools</h3>
+
+ <div class="feature">✂️ Automatic Video Clipping</div>
+ <div class="feature">🌐 Urdu + English Captions</div>
+ <div class="feature">📱 9:16 Shorts Export</div>
+ <div class="feature">🔥 AI Viral Score</div>
+ <div class="feature">📥 Multiple Clips Download</div>
+
+ <p class="muted">
+ AI processing features will be connected in the next development phase.
+ </p>
+</div>
+
+<div class="card">
+ <h3>4. Your Projects</h3>
+ <p class="muted" id="projectStatus">
+ No projects uploaded yet.
+ </p>
+</div>
+
+</div>
+
+<script>
+const videoInput = document.getElementById("videoFile");
+const preview = document.getElementById("videoPreview");
+
+videoInput.addEventListener("change",function(){
+
+ const file = this.files[0];
+
+ if(file){
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+  document.getElementById("projectStatus").textContent =
+  "Selected video: " + file.name;
+ }
+
+});
+
+function prepareClips(){
+
+ const file = videoInput.files[0];
+
+ if(!file){
+  document.getElementById("message").textContent =
+  "Please upload a video first.";
+  return;
+ }
+
+ const language = document.getElementById("language").value;
+ const format = document.getElementById("format").value;
+ const clips = document.getElementById("clips").value;
+
+ document.getElementById("message").textContent =
+ "Settings ready! Language: " + language +
+ " | Format: " + format +
+ " | Clips: " + clips;
+
+}
+</script>
+
+</body>
+</html>
