@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipMaster AI - Video Studio</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#0b1020;color:#f4f6ff;
+ font-family:Arial,sans-serif;
+}
+header{
+ height:65px;padding:0 18px;display:flex;
+ align-items:center;justify-content:space-between;
+ background:#121a30;border-bottom:1px solid #27304b;
+ position:sticky;top:0;z-index:5;
+}
+.logo{font-size:21px;font-weight:bold;color:#91a9ff}
+.logo span{color:#fff}
+.menu{background:none;color:white;border:0;font-size:25px}
+.layout{display:flex;min-height:calc(100vh - 65px)}
+aside{
+ width:220px;background:#121a30;padding:20px 12px;
+ border-right:1px solid #27304b;
+}
+.nav{
+ display:block;width:100%;text-align:left;
+ padding:13px;border:0;border-radius:9px;
+ background:transparent;color:#aeb9d5;
+ margin-bottom:7px;font-size:14px;
+}
+.nav.active,.nav:hover{background:#28385f;color:white}
+main{padding:25px;width:100%;max-width:1200px;margin:auto}
+h1{font-size:27px;margin:5px 0 8px}
+.sub{color:#9caaca;font-size:14px}
+.cards{
+ display:grid;grid-template-columns:repeat(4,1fr);
+ gap:13px;margin:24px 0;
+}
+.card,.panel{
+ background:#151f37;border:1px solid #293653;
+ border-radius:13px;padding:18px;
+}
+.card small{color:#aab7d2}
+.number{font-size:27px;font-weight:bold;margin-top:12px}
+.panel{margin-bottom:18px}
+.panel h2{font-size:18px;margin:0 0 16px}
+.upload{
+ border:2px dashed #596b9b;border-radius:12px;
+ padding:30px 15px;text-align:center;
+ background:#101a31;
+}
+.upload .symbol{font-size:38px}
+button,.btn{
+ cursor:pointer;border:0;border-radius:9px;
+ background:#657fff;color:white;
+ padding:12px 17px;font-weight:bold;
+}
+button:hover,.btn:hover{opacity:.85}
+input,select{
+ background:#0d1528;border:1px solid #354363;
+ color:white;padding:12px;border-radius:8px;width:100%;
+ margin:9px 0 15px;
+}
+label{font-size:13px;color:#c5cde0}
+.options{
+ display:grid;grid-template-columns:1fr 1fr;gap:15px;
+ margin-top:20px;
+}
+video{width:100%;max-height:300px;margin-top:15px;
+ border-radius:10px;background:#080b14}
+#preview{display:none}
+#message{color:#9fb1db;font-size:13px}
+.project{
+ display:flex;justify-content:space-between;align-items:center;
+ padding:13px 0;border-bottom:1px solid #293653;
+ gap:10px;
+}
+.tag{
+ font-size:11px;background:#25365b;
+ color:#b5c8ff;padding:5px 9px;border-radius:20px;
+}
+.page{display:none}
+.page.active{display:block}
+footer{text-align:center;color:#7785a6;padding:25px;font-size:12px}
+@media(max-width:750px){
+ .layout{display:block}
+ aside{display:none;position:fixed;z-index:4;top:65px;
+ width:230px;height:calc(100vh - 65px)}
+ aside.open{display:block}
+ main{padding:17px}
+ .cards{grid-template-columns:1fr 1fr}
+ h1{font-size:23px}
+}
+@media(max-width:380px){
+ .cards{grid-template-columns:1fr 1fr}
+ .options{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">⚡ ClipMaster <span>AI</span></div>
+ <button class="menu" onclick="toggleMenu()">☰</button>
+</header>
+
+<div class="layout">
+<aside id="sidebar">
+ <button class="nav active" onclick="showPage('dashboard',this)">▦ Dashboard</button>
+ <button class="nav" onclick="showPage('studio',this)">✂ AI Video Studio</button>
+ <button class="nav" onclick="showPage('projects',this)">▣ My Projects</button>
+ <button class="nav" onclick="showPage('analytics',this)">◈ Analytics</button>
+ <button class="nav" onclick="showPage('pricing',this)">♛ Pricing Plans</button>
+</aside>
+
+<main>
+
+<section class="page active" id="dashboard">
+ <h1>Welcome to ClipMaster AI 👋</h1>
+ <p class="sub">Your personal AI video creation studio.</p>
+
+ <div class="cards">
+  <div class="card">🎬<div class="number" id="total">0</div><small>Videos Selected</small></div>
+  <div class="card">✂<div class="number">--</div><small>Clips Generated</small></div>
+  <div class="card">👁<div class="number">--</div><small>Total Views</small></div>
+  <div class="card">🔥<div class="number">--</div><small>Viral Score</small></div>
+ </div>
+
+ <div class="panel">
+  <h2>🚀 Quick Start</h2>
+  <p class="sub">Start creating short videos from your long videos.</p>
+  <button onclick="showPage('studio')">Open AI Video Studio →</button>
+ </div>
+
+ <div class="panel">
+  <h2>Recent Projects</h2>
+  <div id="recent"><p class="sub">No projects yet. Upload your first video!</p></div>
+ </div>
+</section>
+
+<section class="page" id="studio">
+ <h1>AI Video Studio ✂</h1>
+ <p class="sub">Prepare your video for short-form content.</p>
+
+ <div class="panel">
+  <h2>1. Upload Your Video</h2>
+  <div class="upload">
+   <div class="symbol">☁️</div>
+   <h3>Select Your Video</h3>
+   <p class="sub">Choose an MP4, MOV or WebM video.</p>
+   <input type="file" id="videoFile" accept="video/*">
+   <video id="preview" controls></video>
+   <p id="fileInfo" class="sub"></p>
+  </div>
+
+  <div class="options">
+   <div>
+    <label>Caption Language</label>
+    <select id="language">
+     <option value="Urdu">Urdu</option>
+     <option value="English">English</option>
+     <option value="Both">Urdu + English</option>
+    </select>
+   </div>
+   <div>
+    <label>Video Format</label>
+    <select id="format">
+     <option>9:16 Shorts / Reels</option>
+     <option>16:9 YouTube</option>
+     <option>1:1 Square</option>
+    </select>
+   </div>
+   <div>
+    <label>Clip Length</label>
+    <select id="length">
+     <option>30 Seconds</option>
+     <option>45 Seconds</option>
+     <option>60 Seconds</option>
+    </select>
+   </div>
+   <div>
+    <label>Clip Quantity</label>
+    <select id="quantity">
+     <option>3 Clips</option>
+     <option>5 Clips</option>
+     <option>10 Clips</option>
+    </select>
+   </div>
+  </div>
+
+  <button style="width:100%;margin-top:10px"
+   onclick="generate()">⚡ Generate AI Clips</button>
+  <p id="message">Select a video to get started.</p>
+ </div>
+ </section>
+
+<section class="page" id="projects">
+ <h1>My Projects</h1>
+ <p class="sub">Your selected video files.</p>
+ <div class="panel" id="projectList">
+  <p class="sub">No projects available yet.</p>
+ </div>
+</section>
+
+<section class="page" id="analytics">
+ <h1>AI Analytics</h1>
+ <p class="sub">Your video performance dashboard.</p>
+ <div class="panel">
+  <h2>Viral Score</h2>
+  <div class="number">Not available yet</div>
+  <p class="sub">Viral analysis will be available after AI integration.</p>
+ </div>
+ <div class="panel">
+  <h2>Video Performance</h2>
+  <p class="sub">Real views and engagement data will appear after platform integration.</p>
+ </div>
+</section>
+
+<section class="page" id="pricing">
+ <h1>Choose Your Plan</h1>
+ <p class="sub">Start free and upgrade when ready.</p>
+ <div class="panel">
+  <h2>🆓 Free Plan</h2>
+  <div class="number">Rs. 0</div>
+  <p class="sub">Basic dashboard and video selection.</p>
+  <button>Current Demo Plan</button>
+ </div>
+ <div class="panel">
+  <h2>⭐ Pro Plan</h2>
+  <div class="number">Rs. 999 / month</div>
+  <p class="sub">Planned AI clipping, captions and exports.</p>
+  <button onclick="alert('Pro subscriptions are not activated yet.')">Coming Soon</button>
+ </div>
+</section>
+
+<footer>© 2026 ClipMaster AI · Built for Creators</footer>
+</main>
+</div>
+
+<script>
+let selectedVideo = null;
+let videoURL = null;
+let projects = [];
+
+function toggleMenu(){
+ document.getElementById('sidebar').classList.toggle('open');
+}
+
+function showPage(id,btn){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+ if(btn) btn.classList.add('active');
+ document.getElementById('sidebar').classList.remove('open');
+}
+
+document.getElementById('videoFile').addEventListener('change',function(){
+ const file=this.files[0];
+ if(!file)return;
+ if(!file.type.startsWith('video/')){
+  alert('Please select a valid video file.');
+  return;
+ }
+ selectedVideo=file;
+ if(videoURL) URL.revokeObjectURL(videoURL);
+ videoURL=URL.createObjectURL(file);
+ const preview=document.getElementById('preview');
+ preview.src=videoURL;
+ preview.style.display='block';
+ document.getElementById('fileInfo').textContent=
+ file.name+' · '+(file.size/1024/1024).toFixed(1)+' MB';
+ document.getElementById('message').textContent='Video selected successfully.';
+});
+
+function generate(){
+ const msg=document.getElementById('message');
+ if(!selectedVideo){
+  msg.textContent='Please select a video first.';
+  return;
+ }
+ const project={
+  name:selectedVideo.name,
+  language:document.getElementById('language').value,
+  format:document.getElementById('format').value,
+  date:new Date().toLocaleDateString()
+ };
+ projects.unshift(project);
+ document.getElementById('total').textContent=projects.length;
+ renderProjects();
+ msg.textContent='Video added to your projects! AI processing backend is not connected yet.';
+}
+
+function renderProjects(){
+ const html=projects.map(p=>
+ `<div class="project">
+  <div><strong>${escapeHTML(p.name)}</strong>
+  <p class="sub">${escapeHTML(p.language)} · ${escapeHTML(p.format)} · ${escapeHTML(p.date)}</p></div>
+  <span class="tag">Selected</span>
+ </div>`).join('');
+ document.getElementById('recent').innerHTML=html;
+ document.getElementById('projectList').innerHTML=html;
+}
+
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+ });
+}
+</script>
+</body>
+      </html>
+      
