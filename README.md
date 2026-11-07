@@ -16,6 +16,3 @@
 
 ## 📂 Project Structure
 ```text
-clipmaster-ai/
-├── README.md
-└── index.html
