@@ -13,6 +13,3 @@
 - **Frontend:** HTML5, Tailwind CSS (CDN), JavaScript (ES6+)
 - **Hosting:** Vercel / GitHub Pages
 - **Repository:** Public GitHub Open Source
-
-## 📂 Project Structure
-```text
